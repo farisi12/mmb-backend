@@ -2,9 +2,9 @@ version: '3.2'
 volumes:
   pg-data:
   postgresql_master_data:
-    driver: host
+    driver: local
   postgresql_slave_data:
-    driver: host
+    driver: local
   locals:
     driver: ${VOLUME_DRIVER}
 networks:
@@ -55,20 +55,3 @@ services:
       - POSTGRESQL_PASSWORD=postgres
       - POSTGRESQL_MASTER_PORT_NUMBER=5432
       - ALLOW_EMPTY_PASSWORD=yes
-  db:
-    build:
-      context: ./.docker/mysql
-      args:
-        - MYSQL_VERSION=${MYSQL_VERSION}
-    environment:
-      - MYSQL_USER=${SONARQUBE_MYSQL_USER}
-      - MYSQL_PASSWORD=${SONARQUBE_MYSQL_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - TZ=${WORKSPACE_TIMEZONE}
-    volumes:
-      - ${DATA_PATH_HOST}/mysql:/var/lib/mysql
-      - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
-    ports:
-      - "${MYSQL_PORT}:3306"
-    networks:
-      - apps
